@@ -12,7 +12,6 @@ from contextlib import closing
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from collections import Counter
 from pathlib import Path
-import contextlib
 import json
 import re
 import ast
@@ -87,9 +86,11 @@ def tcp_srv(tmp_path_factory):
 
     cmd = [sys.executable, "server.py", "-w", "4", "-k", "3", "-p", str(port)]
 
-    SERVER_PATH = Path(__file__).with_name("server.py")
-    log_file = open(logf, "w", encoding="utf-8")  # pylint: disable=consider-using-with
-    cmd = [sys.executable, str(SERVER_PATH), "-w", "4", "-k", "3", "-p", str(port)]
+    SERVER_PATH = Path(__file__).with_name("server.py")  # pylint: disable=invalid-name
+    # pylint: disable=consider-using-with
+    log_file = open(logf, "w", encoding="utf-8")
+    cmd = [sys.executable, str(SERVER_PATH), "-w", "4",
+           "-k", "3", "-p", str(port)]
     proc = subprocess.Popen(
         cmd,
         stdout=log_file,
@@ -139,17 +140,16 @@ def urls_file(http_srv, tmp_path):
 
 def run_client(urls_txt, tcp_srv, threads=3):
     """Запуск клиента"""
+    client_path = Path(__file__).with_name("client.py")
     cmd = [
         sys.executable,
-        "client.py",
+        str(client_path),
         str(threads),
         str(urls_txt),
-        "--host",
-        "127.0.0.1",
-        "--port",
-        str(tcp_srv["port"]),
+        "--host", "127.0.0.1",
+        "--port", str(tcp_srv["port"]),
     ]
-    out = subprocess.check_output(cmd, text=True)
+    out = subprocess.check_output(cmd, text=True, cwd=client_path.parent)
     return parse_client_output(out)
 
 
