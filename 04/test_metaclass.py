@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 import pytest
-from hw_task04.metaclass import CustomMeta
+from metaclass import CustomMeta
 # pylint: disable=no-member
 
 

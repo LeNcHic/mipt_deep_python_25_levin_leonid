@@ -1,7 +1,7 @@
 """Тесты для проверки файла"""
 
 
-from hw_task01.check_large_file import check_file
+from check_large_file import check_file
 
 BANWORDS = ["unlike", "dislike", "skip", "spam"]
 KEYWORDS = ["like", "listen", "favorite"]
@@ -9,7 +9,7 @@ KEYWORDS = ["like", "listen", "favorite"]
 
 def test_check_file():
     """Поиск бан-слов и key-слов"""
-    result = check_file("hw_task01/tests/check_file.txt", BANWORDS, KEYWORDS)
+    result = check_file("01/check_file.txt", BANWORDS, KEYWORDS)
 
     assert result == [
         "I really like this song",
