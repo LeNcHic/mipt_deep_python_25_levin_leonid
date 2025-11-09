@@ -11,6 +11,8 @@ import time
 from contextlib import closing
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from collections import Counter
+from pathlib import Path
+import contextlib
 import json
 import re
 import ast
@@ -84,9 +86,16 @@ def tcp_srv(tmp_path_factory):
     logf = logdir / "server.log"
 
     cmd = [sys.executable, "server.py", "-w", "4", "-k", "3", "-p", str(port)]
-    # pylint: disable=consider-using-with
-    proc = subprocess.Popen(cmd, stdout=open(logf, "w", encoding="utf-8"),
-                            stderr=subprocess.STDOUT, env=os.environ.copy())
+
+    SERVER_PATH = Path(__file__).with_name("server.py")
+    log_file = open(logf, "w", encoding="utf-8")  # pylint: disable=consider-using-with
+    cmd = [sys.executable, str(SERVER_PATH), "-w", "4", "-k", "3", "-p", str(port)]
+    proc = subprocess.Popen(
+        cmd,
+        stdout=log_file,
+        stderr=subprocess.STDOUT,
+        env=os.environ.copy(),
+    )
 
     deadline = time.time() + 5
     ok = False
