@@ -1,7 +1,7 @@
 """Тесты для parse_json"""
 
 
-from hw_task02.parser_json import process_json
+from parser_json import process_json
 
 
 def test_basic_example():

@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 import pytest
-from hw_task04.descriptors import Data, Integer, String, PositiveInteger
+from descriptors import Data, Integer, String, PositiveInteger
 # pylint: disable=too-few-public-methods, missing-class-docstring
 
 

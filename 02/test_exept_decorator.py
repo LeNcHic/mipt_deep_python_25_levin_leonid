@@ -2,7 +2,7 @@
 
 
 import pytest
-from hw_task02.exept_decorator import retry_deco
+from exept_decorator import retry_deco
 
 
 def test_success_no_retry(capsys):

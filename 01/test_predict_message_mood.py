@@ -1,7 +1,7 @@
 """Тесты для predict_message_mood"""
 
 
-from hw_task01.predict_message_mood import predict_message_mood
+from predict_message_mood import predict_message_mood
 
 
 def test_returns_best():

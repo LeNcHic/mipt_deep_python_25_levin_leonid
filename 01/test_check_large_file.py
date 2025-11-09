@@ -1,7 +1,7 @@
 """Тесты для проверки файла"""
 
 
-from hw_task01.check_large_file import check_file
+from check_large_file import check_file
 
 BANWORDS = ["unlike", "dislike", "skip", "spam"]
 KEYWORDS = ["like", "listen", "favorite"]
