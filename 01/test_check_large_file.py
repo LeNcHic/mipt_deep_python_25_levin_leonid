@@ -9,7 +9,7 @@ KEYWORDS = ["like", "listen", "favorite"]
 
 def test_check_file():
     """Поиск бан-слов и key-слов"""
-    result = check_file("01/tests/check_file.txt", BANWORDS, KEYWORDS)
+    result = check_file("01/check_file.txt", BANWORDS, KEYWORDS)
 
     assert result == [
         "I really like this song",
