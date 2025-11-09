@@ -84,9 +84,8 @@ def tcp_srv(tmp_path_factory):
     logdir = tmp_path_factory.mktemp("logs")
     logf = logdir / "server.log"
 
-    cmd = [sys.executable, "server.py", "-w", "4", "-k", "3", "-p", str(port)]
-
-    SERVER_PATH = Path(__file__).with_name("server.py")  # pylint: disable=invalid-name
+    # pylint: disable=invalid-name
+    SERVER_PATH = Path(__file__).with_name("server.py")
     # pylint: disable=consider-using-with
     log_file = open(logf, "w", encoding="utf-8")
     cmd = [sys.executable, str(SERVER_PATH), "-w", "4",
