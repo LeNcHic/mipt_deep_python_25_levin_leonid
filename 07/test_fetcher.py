@@ -6,11 +6,14 @@ import pytest
 import fetcher
 
 
+URLS_PATH = Path(__file__).with_name("urls.txt")
+
+
 def test_parse_args_ok() -> None:
     """Проверяем корректные аргументы: число и существующий файл."""
-    concurrency, path = fetcher.parse_args(["5", "urls.txt"])
+    concurrency, path = fetcher.parse_args(["5", str(URLS_PATH)])
     assert concurrency == 5
-    assert path.name == "urls.txt"
+    assert path == URLS_PATH
 
 
 def test_parse_args_bad_len() -> None:
@@ -22,7 +25,7 @@ def test_parse_args_bad_len() -> None:
 def test_parse_args_not_int_existing_file() -> None:
     """Падаем, если concurrency не число."""
     with pytest.raises(SystemExit):
-        fetcher.parse_args(["abc", "urls.txt"])
+        fetcher.parse_args(["abc", str(URLS_PATH)])
 
 
 def test_parse_args_file_not_found() -> None:
@@ -33,7 +36,7 @@ def test_parse_args_file_not_found() -> None:
 
 def test_parse_args_non_positive_concurrency() -> None:
     """Заменяем неположительное concurrency на 1."""
-    concurrency, _ = fetcher.parse_args(["0", "urls.txt"])
+    concurrency, _ = fetcher.parse_args(["0", str(URLS_PATH)])
     assert concurrency == 1
 
 
@@ -54,7 +57,7 @@ def test_fetch_real_network_basic(capsys) -> None:
 
 def test_fetch_on_full_urls_txt(capsys) -> None:
     """Работаем со всеми url из urls.txt."""
-    urls_path = Path("urls.txt")
+    urls_path = Path(URLS_PATH)
 
     urls = fetcher.read_urls(urls_path)
     asyncio.run(fetcher.fetch_all(urls, concurrency=5))
