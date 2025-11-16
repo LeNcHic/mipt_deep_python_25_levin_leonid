@@ -117,15 +117,13 @@ def profile_calls_for_class(label: str, cls, count: int = 100_000) -> None:
 
     knights = spawn_knights(cls, count)
     work_with_knights(knights)
-
-    # для варианта с weakref можно заодно прогнать создание слабых ссылок
     if cls is KnightSlotsWeak:
         _ = [weakref.ref(k) for k in knights]
 
     profiler.disable()
 
     stats = pstats.Stats(profiler).sort_stats("tottime")
-    stats.print_stats(15)  # top-15 самых "тяжёлых" мест
+    stats.print_stats(15)
 
 
 def profile_calls_per_class(count: int = 100_000) -> None:
