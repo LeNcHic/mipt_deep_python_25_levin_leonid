@@ -1,0 +1,15 @@
+https://huggingface.co/datasets
+https://ya.ru/
+https://lms.mipt.ru
+https://www.google.com
+https://www.wikipedia.org
+https://www.python.org
+https://github.com
+https://pypi.org
+https://vkvideo.ru/
+https://vkvideo.ru/video-220020068_456258932
+https://vkvideo.ru/video-233150414_456239183
+https://vkvideo.ru/video-223614878_456240252
+https://vkvideo.ru/video-212381903_456240958
+https://vkvideo.ru/video-218471746_456239469
+https://www.jetbrains.com/
