@@ -1,5 +1,7 @@
 """LRU-кэш с логированием операций."""
 
+
+# pylint: disable=duplicate-code
 from __future__ import annotations
 
 import logging
