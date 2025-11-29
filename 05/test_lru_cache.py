@@ -1,7 +1,7 @@
 """Тесты для реализации LRUCache"""
 
 import pytest
-from lru_cache import LRUCache
+from lru_cache_simple import LRUCache
 
 
 def test_basic_example_from_task() -> None:
