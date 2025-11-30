@@ -23,7 +23,8 @@ def check_file(
     banwords: Iterable[str],
     keywords: Iterable[str],
 ) -> Iterator[str]:
-    """Генератор строк, где есть хотя бы одно keyword и нет ни одного banword"""
+    """Генератор строк, где есть хотя бы одно keyword
+       и нет ни одного banword"""
     ban_set = {w.lower() for w in banwords}
     key_set = {w.lower() for w in keywords}
 

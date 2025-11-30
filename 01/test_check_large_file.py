@@ -34,7 +34,8 @@ def test_check_file_from_file_object():
 
 
 def test_case_insensitive_and_full_word_match():
-    """Проверка, что поиск не зависит от регистра  и только по полному слову."""
+    """Проверка, что поиск не зависит от регистра
+       и только по полному слову."""
     data = "\n".join(
         [
             "A LiKe song",
@@ -52,4 +53,4 @@ def test_line_with_ban_and_keyword_is_skipped():
     data = "I really like spam\n"
     file_obj = StringIO(data)
     result = list(check_file(file_obj, BANWORDS, KEYWORDS))
-    assert result == []
+    assert not result
