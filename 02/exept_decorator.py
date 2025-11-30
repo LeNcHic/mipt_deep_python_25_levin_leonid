@@ -6,63 +6,94 @@ from functools import wraps
 from typing import Any, Callable, Iterable
 
 
-def retry_deco(
-    basic_func: Callable | None = None,
-    retries: int = 1,
-    expected_exceptions: Iterable[type[BaseException]] | None = None
-):
-    """Декоратор для исключений"""
-    if basic_func and not callable(basic_func):
-        first = basic_func
-        basic_func = None
-        if not expected_exceptions and not isinstance(retries, int):
-            expected_exceptions = retries
-        retries = int(first)
+def _build_log_message(
+    name: str,
+    attempt: int,
+    details: dict[str, Any],
+) -> str:
+    """Собираем строку лога в одном месте."""
+    parts: list[str] = [f'run "{name}"']
 
-    if expected_exceptions:
-        expected = tuple(expected_exceptions)
+    args = details.get("args")
+    kwargs = details.get("kwargs")
+    if args:
+        parts.append(f"with positional args = {args}")
+    if kwargs:
+        parts.append(f"keyword kwargs = {kwargs}")
+
+    parts.append(f"attempt = {attempt}")
+
+    exc = details.get("exception")
+    if exc is not None:
+        parts.append(f"exception = {type(exc).__name__}")
     else:
-        expected = tuple()
+        parts.append(f"result = {details.get('result')!r}")
 
-    def decorator(func: Callable):
-        """Создаем декоратор """
+    return ", ".join(parts)
+
+
+def retry_deco(
+    retries: int = 1,
+    expected_exceptions: Iterable[type[BaseException]] | None = None,
+) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    """Декоратор, повторяющий вызов функции при исключениях."""
+    if retries < 1:
+        raise ValueError("retries must be >= 1")
+    allowed_exceptions: tuple[type[BaseException], ...] = (
+        tuple(expected_exceptions) if expected_exceptions is not None else ()
+    )
+
+    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(func)
-        def wrapper(*args: Any, **kwargs: Any):
-            """Пробуем запустить функцию N раз"""
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             name = func.__name__
+            # pylint: disable=broad-exception-caught
             for attempt in range(1, retries + 1):
                 try:
                     result = func(*args, **kwargs)
-                # pylint: disable-next=broad-exception-caught
                 except Exception as exc:
-                    parts = [f'run "{name}"']
-                    if args:
-                        parts.append(f"with positional args = {args}")
-                    if kwargs:
-                        parts.append(f"keyword kwargs = {kwargs}")
-                    parts.append(f"attempt = {attempt}")
-                    parts.append(f"exception = {type(exc).__name__}")
-                    print(", ".join(parts))
+                    if isinstance(exc, allowed_exceptions):
+                        print(
+                            _build_log_message(
+                                name,
+                                attempt,
+                                {
+                                    "args": args,
+                                    "kwargs": kwargs,
+                                    "exception": exc,
+                                },
+                            )
+                        )
+                        raise exc
 
-                    if isinstance(exc, expected):
-                        raise
-
+                    print(
+                        _build_log_message(
+                            name,
+                            attempt,
+                            {
+                                "args": args,
+                                "kwargs": kwargs,
+                                "exception": exc,
+                            },
+                        )
+                    )
                     if attempt == retries:
-                        raise
+                        raise exc
                     continue
 
-                parts = [f'run "{name}"']
-                if args:
-                    parts.append(f"with positional args = {args}")
-                if kwargs:
-                    parts.append(f"keyword kwargs = {kwargs}")
-                parts.append(f"attempt = {attempt}")
-                parts.append(f"result = {result!r}")
-                print(", ".join(parts))
+                print(
+                    _build_log_message(
+                        name,
+                        attempt,
+                        {
+                            "args": args,
+                            "kwargs": kwargs,
+                            "result": result,
+                        },
+                    )
+                )
                 return result
 
         return wrapper
 
-    if basic_func and callable(basic_func):
-        return decorator(basic_func)
     return decorator
