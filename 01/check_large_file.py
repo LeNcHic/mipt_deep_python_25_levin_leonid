@@ -1,8 +1,8 @@
 """Проверка файла на стоп-слова и поиск таргетных слов."""
 
-from collections.abc import Iterable, Iterator
+
 from pathlib import Path
-from typing import TextIO, Union
+from typing import Iterable, Iterator, TextIO, Union
 
 FileOrName = Union[str, Path, TextIO]
 
